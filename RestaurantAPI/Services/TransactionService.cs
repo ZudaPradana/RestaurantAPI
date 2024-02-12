@@ -2,7 +2,7 @@
 using RestaurantAPI.Data;
 using RestaurantAPI.DTO.Request;
 using RestaurantAPI.Models;
-using RestaurantAPI.Repository;
+using RestaurantAPI.Services.Repository;
 
 namespace RestaurantAPI.Services
 {
@@ -55,7 +55,7 @@ namespace RestaurantAPI.Services
             foreach (var item in items)
             {
                 // Menggunakan service untuk mendapatkan informasi makanan berdasarkan ID
-                var food = await _foodService.GetFoodById(item.FoodId);
+                var food = await _foodService.GetFoodByIdAsync(item.FoodId);
 
                 if (food != null)
                 {

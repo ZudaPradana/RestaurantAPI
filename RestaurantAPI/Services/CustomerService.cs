@@ -2,7 +2,7 @@
 using RestaurantAPI.Data;
 using RestaurantAPI.DTO.Request;
 using RestaurantAPI.Models;
-using RestaurantAPI.Repository;
+using RestaurantAPI.Services.Repository;
 
 namespace RestaurantAPI.Services
 {
@@ -32,8 +32,14 @@ namespace RestaurantAPI.Services
             return findById;
         }
 
-        public async Task<Customer> AddCustomerAsync(Customer customer)
+        public async Task<Customer> AddCustomerAsync(CustomerReqDTO reqDTO)
         {
+            var customer = new Customer
+            {
+                Name = reqDTO.Name,
+                Email = reqDTO.Email,
+                PhoneNumber = reqDTO.PhoneNumber,
+            };
             //add data
             await _context.Customers.AddAsync(customer);
             //save after change
@@ -57,9 +63,16 @@ namespace RestaurantAPI.Services
         }
 
 
-        public async Task<bool> UpdateCustomerAsync(Customer customer, int id)
+        public async Task<bool> UpdateCustomerAsync(CustomerReqDTO reqDTO, int id)
         {
             var editById = await GetCustomerByIdAsync(id);
+
+            var customer = new Customer
+            {
+                Name = reqDTO.Name,
+                Email = reqDTO.Email,
+                PhoneNumber = reqDTO.PhoneNumber,
+            };
 
             if(editById != null)
             {
@@ -67,6 +80,7 @@ namespace RestaurantAPI.Services
                 editById.Email = customer.Email;
                 editById.PhoneNumber = customer.PhoneNumber;
 
+                await _context.SaveChangesAsync();
                 return true;
             }
 
