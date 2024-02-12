@@ -23,7 +23,7 @@ namespace RestaurantAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Food>>> GetAllFood()
         {
-            var response = await _foodService.GetAllFood();
+            var response = await _foodService.GetAllFoodAsync();
             return Ok(response);
         }
 
@@ -32,7 +32,7 @@ namespace RestaurantAPI.Controllers
         {
             try
             {
-                var findById = await _foodService.GetFoodById(id);
+                var findById = await _foodService.GetFoodByIdAsync(id);
                 if (findById == null)
                 {
                     return NotFound($"Customer with ID {id} not found");
@@ -45,11 +45,12 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Food>> AddFood([FromBody] FoodReqDTO reqDTO)
+        public async Task<ActionResult> AddFood([FromBody] FoodReqDTO reqDTO)
         {
             try
             {
-                return new ObjectResult("Adding Successfully") { StatusCode = 201 };
+                await _foodService.AddFoodAsync(reqDTO);
+                return new ObjectResult(reqDTO) { StatusCode = 201 };
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -61,7 +62,7 @@ namespace RestaurantAPI.Controllers
         {
             try
             {
-                await _foodService.GetFoodById(id);
+                await _foodService.DeleteFoodAsync(id);
 
                 return Ok(new OkObjectResult($"Delete ID {id} Successfully"));
             } catch(Exception ex)
@@ -71,11 +72,11 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditFood([FromBody] FoodReqDTO  reqDTO, int id)
+        public async Task<ActionResult> UpdateFoodAsync([FromBody] FoodReqDTO  reqDTO, int id)
         {
             try
             {
-                await _foodService.UpdateFood(reqDTO, id);
+                await _foodService.UpdateFoodAsync(reqDTO, id);
                 return new ObjectResult($"Edited ID {id} Successfully");
             } catch(Exception ex)
             {

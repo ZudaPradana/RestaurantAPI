@@ -46,19 +46,12 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddCustomer([FromBody] CustomerReqDTO customerReqDTO)
+        public async Task<ActionResult> AddCustomer([FromBody] CustomerReqDTO reqDTO)
         {
             try
             {
-                var newCustomer = new Customer
-                {
-                    Name = customerReqDTO.Name,
-                    Email = customerReqDTO.Email,
-                    PhoneNumber = customerReqDTO.PhoneNumber
-                };
-
-                var addedCustomer = await _customerService.AddCustomerAsync(newCustomer);
-                return new ObjectResult("Adding Successfully") { StatusCode = 201 };
+                await _customerService.AddCustomerAsync(reqDTO);
+                return new ObjectResult(reqDTO) { StatusCode = 201 };
             }
             catch (Exception ex)
             {
@@ -69,18 +62,11 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCustomer(int id, [FromBody] CustomerReqDTO customerReqDTO)
+        public async Task<ActionResult> UpdateCustomer(int id, [FromBody] CustomerReqDTO reqDTO)
         {
             try
             {
-                var customer = new Customer
-                {
-                    Name = customerReqDTO.Name,
-                    Email = customerReqDTO.Email,
-                    PhoneNumber = customerReqDTO.PhoneNumber
-                };
-
-                var updatedCustomer = await _customerService.UpdateCustomerAsync(customer, id);
+                await _customerService.UpdateCustomerAsync(reqDTO, id);
                 return new ObjectResult($"Edited ID {id} Successfully");
             }
             catch (Exception ex)
